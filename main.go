@@ -9,28 +9,32 @@ import (
 )
 
 func main() {
+	//开启服务
 	server.OpenPostgres()
 	engine := server.NewEngine()
-	err := engine.Engine.Sync(new(users.Student))
+
+	//同步数据库字段
+	err := engine.Engine.Sync(new(users.Users))
 	if  err != nil{
 		log.Fatal(err)
 	}
-	//sql, err:=engine.Engine.QueryString("select * from student")
-	var s []users.Student
 
-	err = engine.Engine.Find(&s,users.Student{})
+	user := make([]users.Users,0)
+	u := users.Users{}.AddUsers("女","王绿绿", 1, 17)
+	engine.Engine.ShowSQL(true)
+	_, err =engine.Engine.Omit("id").Insert(u)
+
+	if err != nil{
+		fmt.Println(err)
+	}
+
+	err = engine.Engine.Find(&user,users.Users{})
 	if err!= nil {
 		fmt.Printf("%v",err)
 	}
-
-	for _,v:= range s {
-		fmt.Println(v.Id)
-	}
-	//for _,v := range sql{
-	//	for k, vv := range v {
-	//		fmt.Print(k+ " : ")
-	//		fmt.Println(vv)
-	//	}
+	fmt.Printf("%+v",user)
+	//for _,v:= range s {
+	//	fmt.Println(v.Id)
 	//}
 }
 
