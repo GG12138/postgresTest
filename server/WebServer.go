@@ -70,11 +70,12 @@ func Login(w http.ResponseWriter, r *http.Request){
 	}
 }
 func main(){
-	//http.HandleFunc("/" , sayhelloName)
+	http.HandleFunc("/" , sayhelloName)
 	http.HandleFunc("/login", Login)
 	http.HandleFunc("/upload", Upload)
-	err := http.ListenAndServe(":8080" , nil)
+	err := http.ListenAndServe(":9090" , nil)
 	if err != nil {
 		log.Fatal("listenServer",err)
 	}
+
 }
