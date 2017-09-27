@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"encoding/json"
-	"github.com/simplejson"
+	
 )
 
 type Server struct {
@@ -14,23 +14,23 @@ type Serverslice struct {
 	Servers []Server
 }
 func main() {
-	//var s Serverslice
-	//str := `{"servers":
-	//		[{"serverName":"Shanghai_VPN","serverIP":"127.0.0.1"},
-	//		{"serverName":"Beijing_VPN","serverIP":"127.0.0.2"}]}`
-	//json.Unmarshal([]byte(str),&s)
-	//fmt.Printf("%+v", s)
-	var f interface{}
-	//b := []byte(`{"name":"zhukai","age":18,"sex":"男"}`)
-	b := []byte(`{"Name":"Wednesday","Age":6,"Parents":["Gomez","Morticia"]}`)
-	err := json.Unmarshal(b,&f)
-	if err!= nil {
-		fmt.Println(err)
-	}
-	//m := f.(map[string]interface{})
-	js ,_ := simplejson.NewJson(b)
-
-	fmt.Println(js.Get("Name").String())
+	var s Serverslice
+	str := `{"servers":
+			[{"serverName":"Shanghai_VPN","serverIP":"127.0.0.1"},
+			{"serverName":"Beijing_VPN","serverIP":"127.0.0.2"}]}`
+	json.Unmarshal([]byte(str),&s)
+	fmt.Printf("%+v", s)
+	//var f interface{}
+	////b := []byte(`{"name":"zhukai","age":18,"sex":"男"}`)
+	//b := []byte(`{"Name":"Wednesday","Age":6,"Parents":["Gomez","Morticia"]}`)
+	//err := json.Unmarshal(b,&f)
+	//if err!= nil {
+	//	fmt.Println(err)
+	//}
+	////m := f.(map[string]interface{})
+	//js ,_ := simplejson.NewJson(b)
+	//
+	//fmt.Println(js.Get("Name").String())
 
 
 	//fmt.Println(arr)
