@@ -59,10 +59,11 @@ func main(){
 	s.Servers = append(s.Servers, Server{ServerName: "Shanghai_VPN", ServerIP: "127.0.0.2"})
 
 	ret := MarshalJson(s)
-	UnmarshalJson([]byte(ret),&s)
 	fmt.Println(ret)
+
+	UnmarshalJson([]byte(ret),&s)
 	for _, v := range s.Servers {
-		fmt.Printf("%+v",v)
+		fmt.Printf("%+v\r\n",v)
 	}
 }
 func UnmarshalJson(b []byte, beans interface{}){
