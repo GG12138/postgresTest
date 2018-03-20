@@ -2,57 +2,43 @@ package main
 
 import (
 	"fmt"
-	_ "github.com/lib/pq"
+
 	"./server"
-	"./users"
+	u "./users"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
+	_ "github.com/lib/pq"
 )
 
 func main() {
+
 	//开启服务
+	echo := echo.New()
 	server.OpenPostgres()
-	engine := server.NewEngine()
-	user := new(users.Users)
-	has, _ := engine.Engine.IsTableExist(user)
-	_, _ = engine.Engine.IsTableEmpty(user)
-	if !has {
-		fmt.Println("------>同步数据库字段<--------")
-		engine.Sync(user)
-	}
-	//删除数据库
-	//engine.Engine.DropTables(user)
 
-	uu := user.AddUsers("男", "朱凯", 18)
-	engine.OmitInsert("id",uu)
-	//user.Name = "王绿绿"
-	//user.Sex = "女"
-	//user.Age = 17
-	//session := engine.Engine.NewSession()
-	//defer session.Close()
-	//err := session.Begin()
-	//if err !=nil{
-	//
-	//}
-	//_, err = session.Id(1).Update(user)
-	//if err != nil {
-	//	fmt.Println("--------------->修改错误 session.Rollback")
-	//	session.Rollback()
-	//	return
-	//}
-	//err = session.Commit()
-	//if err != nil{
-	//	return
-	//}
-	//engine.Engine.Id(1).Update(user)
-	u := make([]users.Users,0)
-	engine.GetAllSelect(&u)
-	for _, v := range u {
-		fmt.Println(v)
-	}
+	//同源跨域
+	echo.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     []string{"http://192.168.0.101:3000"},
+		AllowCredentials: true,
+	}))
 
-
-
+	echo.POST("/", Login)
+	echo.Logger.Fatal(echo.Start(":8080"))
 }
+func Login(e echo.Context) error {
 
-
-
-
+	username := e.FormValue("username")
+	password := e.FormValue("password")
+	fmt.Println(e.FormParams())
+	engine := server.NewEngine()
+	user := &u.Users{
+		Name:     username,
+		Password: password,
+	}
+	has, _ := engine.Engine.Get(user)
+	if !has {
+		fmt.Println("登录失败")
+		return e.String(200, "err")
+	}
+	return e.JSON(200, user)
+}

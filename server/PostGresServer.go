@@ -19,6 +19,10 @@ func OpenPostgres(){
 		fmt.Println(engine.Ping())
 	}
 }
+func Close(){
+	engine.Close()
+}
+
 type Engine struct {
 	Engine *xorm.Engine
 }
@@ -32,7 +36,7 @@ func(e Engine) Sync(beans interface{}){
 	if  err != nil{
 		log.Fatal(err)
 	}else{
-		fmt.Println("----------------->同步数据库成功")
+		fmt.Println("PostGresServer Sync()----------------->同步数据库成功<--------------")
 	}
 }
 //忽略主键添加（主键自增）
@@ -47,9 +51,10 @@ func(e Engine) OmitInsert(id string, bean interface{}) {
 }
 //根据id查找
 func(e Engine) GetId(id int64,bean interface{}) bool{
-	has , err:= e.Engine.Id(1).Get(bean)
+	has , err:= e.Engine.Id(id).Get(bean)
+	fmt.Println("bean : ",bean)
 	if !has {
-		log.Fatal("查询失败：%v",err)
+		log.Fatal("查询失败:",err)
 	}
 	return has
 }
@@ -58,7 +63,7 @@ func(e Engine) GetAllSelect(bean interface{}){
 	//bean 必须是指针
 	err := e.Engine.Find(bean)
 	if err!= nil {
-		fmt.Printf("----: %v",err)
+		fmt.Printf("%v:查询失败----: %v",err)
 	}
 }
 //删除
